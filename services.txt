@@ -1,0 +1,8 @@
+overseer
+prowlarr
+bazarr
+sabnzbd
+sonarr
+radarr
+lidarr
+plex
