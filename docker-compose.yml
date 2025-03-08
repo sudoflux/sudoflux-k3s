@@ -1,0 +1,96 @@
+# As an example for two common *arr lines, volumes work like so:
+# ${HOME}/<service>/config:/config
+# ${HOME}/<service>/data:/data
+# If you want to change the path that gets mapped outside the container, you can do so by changing the left side of the colon.
+# If you want to change the path that gets mapped inside the container, you can do so by changing the right side of the colon.
+services:
+  #Request
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: Overseerr
+    env_file:
+      - .env
+    volumes:
+      - ${HOME}/overseerr/config:/app/config
+    ports:
+      - 5055:5055
+    restart: unless-stopped
+  #Search
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: Prowlarr
+    env_file:
+      - .env
+    volumes:
+      - ${HOME}/prowlarr/config:/app/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: Bazarr
+    env_file:
+      - .env
+    volumes:
+      - ${HOME}/bazarr/config:/app/config
+      - ${HOME}/bazarr/data:/app/data
+    ports:
+      - 6767:6767
+    restart: unless-stopped
+  #Download
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: Sabnzbd
+    env_file:
+      - .env
+    volumes:
+      - ${HOME}/sabnzbd/config:/config
+      - ${HOME}/sabnzbd/data/usenet:/data/usenet
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+  #Manage
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    env_file:
+      - .env
+    volumes:
+      - ${HOME}/sonarr/config:/config
+      - ${HOME}/sonarr/data:/data
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    env_file:
+      - .env
+    volumes:
+      - ${HOME}/radarr/config:/config
+      - ${HOME}/radarr/data:/data
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    env_file:
+      - .env
+    volumes:
+      - ${HOME}/lidarr/config:/config
+      - ${HOME}/lidarr/data:/data
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+  #Watch
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    env_file:
+      - .env
+    volumes:
+      - ${HOME}/plex/config:/config
+      - ${HOME}/plex/data/media:/data/media
+    restart: unless-stopped
