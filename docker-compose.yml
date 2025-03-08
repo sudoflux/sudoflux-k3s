@@ -1,8 +1,10 @@
+# ---
 # As an example for two common *arr lines, volumes work like so:
 # ${HOME}/<service>/config:/config
 # ${HOME}/<service>/data:/data
 # If you want to change the path that gets mapped outside the container, you can do so by changing the left side of the colon.
 # If you want to change the path that gets mapped inside the container, you can do so by changing the right side of the colon.
+# ---
 services:
   #Request
   overseerr:
