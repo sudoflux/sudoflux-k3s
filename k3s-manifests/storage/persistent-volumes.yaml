@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: k3s-configs-pv
+spec:
+  capacity:
+    storage: 500Gi  # Used for application settings, metadata, and database storage
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/nvme_storage
+    server: 192.168.10.100
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: k3s-data-pv
+spec:
+  capacity:
+    storage: 30Ti  # Updated to reflect full 30TB capacity for media storage
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/rust/media
+    server: 192.168.10.100
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: k3s-scratch-pv-k3s1
+spec:
+  capacity:
+    storage: 100Gi  # Local fast storage on k3s1 worker node
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  local:
+    path: /mnt/scratch
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k3s1
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: k3s-scratch-pv-k3s2
+spec:
+  capacity:
+    storage: 100Gi  # Local fast storage on k3s2 worker node
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: local-storage
+  local:
+    path: /mnt/scratch
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k3s2
