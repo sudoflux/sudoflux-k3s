@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: bgp-test
+  namespace: default
+  labels:
+    bgp: "enabled"
+spec:
+  selector:
+    app: test-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
