@@ -24,7 +24,9 @@ BGP did not work from the gui, needed to ssh into the UDM SE:
 sed -i 's/bgpd=no/bgpd=yes/g' /etc/frr/daemons
 systemctl enable frr.service && service frr start
 vi /etc/frr/frr.conf
-
+```
+```
+#
 log file stdout
 hostname UDMSE
 router bgp 64513
@@ -54,19 +56,32 @@ To check from Cilium side run:
 ```
 cilium bgp peers
 ```
+EX:
+josh@k3s-master1:~/plexyandyouknowit/k3s-manifests/storage$ cilium bgp peers
+Node          Local AS   Peer AS   Peer Address   Session State   Uptime      Family         Received   Advertised
+k3s-master1   64512      64513     192.168.1.1    established     10h18m43s   ipv4/unicast   0          0
+                                                                              ipv6/unicast   0          0
+k3s1          64512      64513     192.168.1.1    established     10h22m30s   ipv4/unicast   0          0
+                                                                              ipv6/unicast   0          0
+k3s2          64512      64513     192.168.1.1    established     10h22m45s   ipv4/unicast   0          0
+                                                                              ipv6/unicast   0          0
+k3s3          64512      64513     192.168.1.1    established     34m52s      ipv4/unicast   0          0
+
 To apply storage configs:
 ```
 kubectl apply -f persistent-volumes.yaml
 kubectl apply -f persistent-volume-claims.yaml
 ```
-This is how it should look:
+To verify storage use:
 ```
-josh@k3s-master1:~/plexyandyouknowit/k3s-manifests/storage$ kubectl get pv
+ubectl get pv
 kubectl get pvc
 kubectl get storageclass
 kubectl describe pvc k3s-scratch-pvc-k3s1
 kubectl describe pvc k3s-scratch-pvc-k3s2
 kubectl describe pvc k3s-scratch-pvc-k3s3
+```
+This is how it should look:
 
 NAME                  CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                          STORAGECLASS    VOLUMEATTRIBUTESCLASS   REASON   AGE
 k3s-configs-pv        500Gi      RWX            Retain           Bound    default/k3s-configs-pvc                        <unset>                          12m
@@ -121,6 +136,6 @@ Access Modes:  RWO
 VolumeMode:    Filesystem
 Used By:       <none>
 Events:        <none>
-```
+
 
 
