@@ -18,7 +18,7 @@ cilium install \
   --set k8sServicePort=${API_SERVER_PORT} \
   --set kubeProxyReplacement=true
 ```
-BGP did not work from the gui, ssh into the UDM SE:
+BGP did not work from the gui, needed to ssh into the UDM SE:
 
 ```
 sed -i 's/bgpd=no/bgpd=yes/g' /etc/frr/daemons
