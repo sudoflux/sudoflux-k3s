@@ -48,7 +48,7 @@ and
 ```
 vtysh -c "show bgp summary"
 ```
-The key to this was that I thought 'Active' meant it was talking but it does not, it needed to say Established before it was actually working.
+The key to this was that I thought 'Active' meant it was talking but it does not, it needed to say Established before it was actually working. The issue was sort of bizzare, I originally set localASN: 64512 (K3s) and peerASN: 64513 (UDM SE) correctly in the file. Noticed in the log they both showed 64512, I reapplied the config and still it was wrong, except when I reapplied the config it was actually wrong in the file after. Once I changed it, they were no longer on the same ASN and that was when it ended up finally working.
 
 To check from Cilium side run
 ```
