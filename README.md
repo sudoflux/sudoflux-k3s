@@ -57,6 +57,7 @@ vtysh -c "show bgp summary"
 cilium bgp peers
 ```
 **EX:**__
+```
 josh@k3s-master1:~/plexyandyouknowit/k3s-manifests/storage$ cilium bgp peers
 Node          Local AS   Peer AS   Peer Address   Session State   Uptime      Family         Received   Advertised
 k3s-master1   64512      64513     192.168.1.1    established     10h18m43s   ipv4/unicast   0          0
@@ -66,7 +67,7 @@ k3s1          64512      64513     192.168.1.1    established     10h22m30s   ip
 k3s2          64512      64513     192.168.1.1    established     10h22m45s   ipv4/unicast   0          0
                                                                               ipv6/unicast   0          0
 k3s3          64512      64513     192.168.1.1    established     34m52s      ipv4/unicast   0          0
-
+```
 **_To apply storage configs:_**
 ```
 kubectl apply -f persistent-volumes.yaml
