@@ -82,7 +82,7 @@ kubectl describe pvc k3s-scratch-pvc-k3s2
 kubectl describe pvc k3s-scratch-pvc-k3s3
 ```
 **_This is how it should look:_**
-
+```
 NAME                  CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                          STORAGECLASS    VOLUMEATTRIBUTESCLASS   REASON   AGE
 k3s-configs-pv        500Gi      RWX            Retain           Bound    default/k3s-configs-pvc                        <unset>                          12m
 k3s-data-pv           30Ti       RWX            Retain           Bound    default/k3s-data-pvc                           <unset>                          12m
@@ -136,6 +136,6 @@ Access Modes:  RWO
 VolumeMode:    Filesystem
 Used By:       <none>
 Events:        <none>
-
+```
 
 
