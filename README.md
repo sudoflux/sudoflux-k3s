@@ -18,6 +18,19 @@ cilium install \
   --set k8sServicePort=${API_SERVER_PORT} \
   --set kubeProxyReplacement=true
 ```
+**_To restart Cilium on all nodes:_**
+```
+kubectl rollout restart daemonset -n kube-system cilium
+```
+_**Easyish way to see why BGP is broken:**_
+```
+kubectl logs -n kube-system -l k8s-app=cilium --tail=50 | grep BGP
+```
+**_And:_**
+```
+kubectl describe ciliumbgppeeringpolicy -n kube-system bgp-peering
+```
+
 **_BGP did not work from the gui, needed to ssh into the UDM SE:_**
 
 ```
