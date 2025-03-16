@@ -30,9 +30,7 @@ kubectl logs -n kube-system -l k8s-app=cilium --tail=50 | grep BGP
 ```
 kubectl describe ciliumbgppeeringpolicy -n kube-system bgp-peering
 ```
-
 **_BGP did not work from the gui, needed to ssh into the UDM SE:_**
-
 ```
 sed -i 's/bgpd=no/bgpd=yes/g' /etc/frr/daemons
 systemctl enable frr.service && service frr start
@@ -55,6 +53,8 @@ router bgp 64513
 ```
 kubectl apply -f https://raw.githubusercontent.com/cilium/cilium/main/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumbgppeeringpolicies.yaml
 ```
+**_Also, I cannot have my layer 3 switch doing the routing for the vlan that they kubes are on, BGP will not work and I cannot think of a workaround - the UDM has to be doing the routing._**
+
 **_To test from UDM:_**
 ```
 vtysh -c "show ip bgp"
@@ -64,7 +64,10 @@ vtysh -c "show ip bgp"
 vtysh -c "show bgp summary"
 ```
 **_The key to this was that I thought 'Active' meant it was talking but it does not, it needed to say Established before it was actually working. The issue was sort of bizzare, I originally set localASN: 64512 (K3s) and peerASN: 64513 (UDM SE) correctly in the file. Noticed in the log they both showed 64512, I reapplied the config and still it was wrong, except when I reapplied the config it was actually wrong in the file after. Once I changed it, they were no longer on the same ASN and that was when it ended up finally working._**
-
+_**Checking ASN's quickly:**_
+```
+kubectl get ciliumbgppeeringpolicy -n kube-system -o yaml
+```
 **_To check from Cilium side run:_**
 ```
 cilium bgp peers
