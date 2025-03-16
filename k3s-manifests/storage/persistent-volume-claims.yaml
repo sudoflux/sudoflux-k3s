@@ -21,15 +21,4 @@ spec:
     requests:
       storage: 30Ti  # Full 30TB capacity for media storage
   storageClassName: ""
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: k3s-scratch-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Gi  # Fast NVMe storage on each worker node
-  storageClassName: local-storage
+
