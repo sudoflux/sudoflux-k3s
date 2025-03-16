@@ -68,6 +68,45 @@ k3s2          64512      64513     192.168.1.1    established     10h22m45s   ip
                                                                               ipv6/unicast   0          0
 k3s3          64512      64513     192.168.1.1    established     34m52s      ipv4/unicast   0          0
 ```
+**The ingress service has to have the BGP label or Cilium will not broadcast the load balancer IP to the UDM.**__
+
+**Example with BGP enabled and even showing established on all nodes, but look in 'vtysh' on the UDM:**__
+
+```
+root@UDMSE:/etc/frr# vtysh
+
+Hello, this is FRRouting (version 8.1).
+Copyright 1996-2005 Kunihiro Ishiguro, et al.
+
+frr# show ip bgp
+No BGP prefixes displayed, 0 exist
+```
+**It does not know the Load Balancer exists. To check and add the label:**__
+```
+kubectl get svc -n kube-system cilium-ingress --show-labels
+```
+```
+kubectl label svc cilium-ingress -n kube-system bgp=enabled
+```
+**Now with the label added, you should see both 'ingress=true' and 'bgp=enabled' for the cilium-ingress service. Now check the UDM again:**__
+```
+frr# show ip bgp
+BGP table version is 1, local router ID is 192.168.1.1, vrf id 0
+Default local pref 100, local AS 64513
+Status codes:  s suppressed, d damped, h history, * valid, > best, = multipath,
+               i internal, r RIB-failure, S Stale, R Removed
+Nexthop codes: @NNN nexthop's vrf id, < announce-nh-self
+Origin codes:  i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+   Network          Next Hop            Metric LocPrf Weight Path
+*> 192.168.10.40/32 192.168.10.21                          0 64512 i
+*=                  192.168.10.23                          0 64512 i
+*=                  192.168.10.30                          0 64512 i
+*=                  192.168.10.31                          0 64512 i
+
+Displayed  1 routes and 4 total paths
+```
 **_To apply storage configs:_**
 ```
 kubectl apply -f persistent-volumes.yaml
