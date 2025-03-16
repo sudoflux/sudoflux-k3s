@@ -130,9 +130,3 @@ NAME                   PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE
 local-path (default)   rancher.io/local-path   Delete          WaitForFirstConsumer   false                  18h
 
 ```
-To apply the services:
-```
-kubectl apply -f arr.yaml
-```
-
-
