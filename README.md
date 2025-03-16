@@ -49,7 +49,7 @@ router bgp 64513
  neighbor 192.168.10.30 remote-as 64512
  neighbor 192.168.10.31 remote-as 64512
 ```
-_**If using external domain name with Cloudflare for local DNS you cannot have the proxy enabled. You will be able to talk to the services from outside the Kube in but the services inside cannot talk to eachother via DNA with the proxy on.**_
+_**If using external domain name with Cloudflare for local DNS you cannot have the proxy enabled. You will be able to talk to the services from outside the Kube in but the services inside cannot talk to eachother via DNS with the proxy on.**_
 
 **_To apply the v2alpha CRD (this was all that worked for me):_**
 ```
