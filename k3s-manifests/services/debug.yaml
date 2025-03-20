@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-cleaner
+spec:
+  containers:
+    - name: pvc-cleaner
+      image: alpine
+      command: ["sh"]
+      stdin: true
+      tty: true
+      volumeMounts:
+        - mountPath: "/config"
+          name: shared-config
+  volumes:
+    - name: shared-config
+      persistentVolumeClaim:
+        claimName: k3s-configs-pvc
+  restartPolicy: Never

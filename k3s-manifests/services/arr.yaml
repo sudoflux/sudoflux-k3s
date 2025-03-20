@@ -1,15 +1,111 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: k3s-configs-pvc
-  namespace: default
+  name: plex-config-pvc
 spec:
   accessModes:
     - ReadWriteMany
-  resources:
-      requests:
-        storage: 500Gi
   storageClassName: ""
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: plex-config-pv
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: radarr-config-pv
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-config-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: sonarr-config-pv
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: overseerr-config-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: overseerr-config-pv
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prowlarr-config-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: prowlarr-config-pv
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lidarr-config-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: lidarr-config-pv
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sabnzbd-config-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: sabnzbd-config-pv
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bazarr-config-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  resources:
+    requests:
+      storage: 100Mi
+  volumeName: bazarr-config-pv
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -30,7 +126,9 @@ metadata:
   name: rr-env
   namespace: default
 data:
-  TZ: "America/Louisville"
+  TZ: "America/Kentucky/Louisville"
+  PUID: "1000"
+  PGID: "1000"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -55,13 +153,13 @@ spec:
             name: rr-env
         volumeMounts:
         - name: config
-          mountPath: /app/config
+          mountPath: /config
         ports:
         - containerPort: 5055
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: k3s-configs-pvc
+          claimName: overseerr-config-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -112,6 +210,10 @@ spec:
       labels:
         app: prowlarr
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: prowlarr
         image: lscr.io/linuxserver/prowlarr:develop
@@ -120,13 +222,13 @@ spec:
             name: rr-env
         volumeMounts:
         - name: config
-          mountPath: /app/config
+          mountPath: /config
         ports:
         - containerPort: 9696
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: k3s-configs-pvc
+          claimName: prowlarr-config-pvc
 ---
 apiVersion: v1
 kind: Service
@@ -177,6 +279,10 @@ spec:
       labels:
         app: sonarr
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: sonarr
         image: lscr.io/linuxserver/sonarr:latest
@@ -186,15 +292,15 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-        - name: data
-          mountPath: /data
+        - name: media
+          mountPath: /media 
         ports:
         - containerPort: 8989
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: k3s-configs-pvc
-      - name: data
+          claimName: sonarr-config-pvc
+      - name: media
         persistentVolumeClaim:
           claimName: k3s-data-pvc
 ---
@@ -247,6 +353,10 @@ spec:
       labels:
         app: radarr
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000      
       containers:
       - name: radarr
         image: lscr.io/linuxserver/radarr:latest
@@ -256,15 +366,15 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-        - name: data
-          mountPath: /data
+        - name: media
+          mountPath: /media
         ports:
-        - containerPort: 8989
+        - containerPort: 7878
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: k3s-configs-pvc
-      - name: data
+          claimName: radarr-config-pvc
+      - name: media
         persistentVolumeClaim:
           claimName: k3s-data-pvc
 ---
@@ -278,8 +388,8 @@ spec:
     app: radarr
   ports:
   - protocol: TCP
-    port: 8989
-    targetPort: 8989
+    port: 7878
+    targetPort: 7878
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
@@ -300,7 +410,7 @@ spec:
           service:
             name: radarr
             port:
-              number: 8989
+              number: 7878
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -317,6 +427,10 @@ spec:
       labels:
         app: lidarr
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: lidarr
         image: lscr.io/linuxserver/lidarr:latest
@@ -326,15 +440,15 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-        - name: data
-          mountPath: /data
+        - name: media
+          mountPath: /media
         ports:
-        - containerPort: 8989
+        - containerPort: 8686
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: k3s-configs-pvc
-      - name: data
+          claimName: lidarr-config-pvc
+      - name: media
         persistentVolumeClaim:
           claimName: k3s-data-pvc
 ---
@@ -348,8 +462,8 @@ spec:
     app: lidarr
   ports:
   - protocol: TCP
-    port: 8989
-    targetPort: 8989
+    port: 8686
+    targetPort: 8686
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
@@ -370,7 +484,7 @@ spec:
           service:
             name: lidarr
             port:
-              number: 8989
+              number: 8686
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -387,6 +501,10 @@ spec:
       labels:
         app: bazarr
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: bazarr
         image: lscr.io/linuxserver/bazarr:latest
@@ -403,7 +521,7 @@ spec:
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: k3s-configs-pvc
+          claimName: bazarr-config-pvc
       - name: data
         persistentVolumeClaim:
           claimName: k3s-data-pvc
@@ -487,7 +605,7 @@ spec:
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: k3s-configs-pvc
+          claimName: plex-config-pvc
       - name: media
         persistentVolumeClaim:
           claimName: k3s-data-pvc
@@ -549,6 +667,10 @@ spec:
       labels:
         app: sabnzbd
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: sabnzbd
         image: lscr.io/linuxserver/sabnzbd:latest
@@ -558,18 +680,23 @@ spec:
         volumeMounts:
         - name: config
           mountPath: /config
-        - name: downloads
-          mountPath: /data/usenet
+        - name: temp-downloads
+          mountPath: /data/incomplete  # Temporary downloads (hostPath)
+        - name: media
+          mountPath: /media
         ports:
         - containerPort: 8080
       volumes:
       - name: config
         persistentVolumeClaim:
-          claimName: k3s-configs-pvc
-      - name: downloads
+          claimName: sabnzbd-config-pvc
+      - name: temp-downloads
         hostPath:
-          path: /mnt/scratch
+          path: /mnt/scratch  # Use host path for temp downloads
           type: Directory
+      - name: media
+        persistentVolumeClaim:
+          claimName: k3s-data-pvc  # Completed downloads on NFS storage
 ---
 apiVersion: v1
 kind: Service

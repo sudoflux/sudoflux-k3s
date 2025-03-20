@@ -1,15 +1,119 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: k3s-configs-pv
+  name: plex-config-pv
 spec:
   capacity:
-    storage: 500Gi  # Used for application settings, metadata, and database storage
+    storage: 100Mi
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
   nfs:
-    path: /mnt/nvme_storage
+    path: /mnt/nvme_storage/plex
+    server: 192.168.10.100
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: radarr-config-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/nvme_storage/radarr
+    server: 192.168.10.100
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sonarr-config-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/nvme_storage/sonarr
+    server: 192.168.10.100
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: overseerr-config-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/nvme_storage/overseerr
+    server: 192.168.10.100
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: prowlarr-config-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/nvme_storage/prowlarr
+    server: 192.168.10.100
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: lidarr-config-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/nvme_storage/lidarr
+    server: 192.168.10.100
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: bazarr-config-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/nvme_storage/bazarr
+    server: 192.168.10.100
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sabnzbd-config-pv
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mnt/nvme_storage/sabnzbd
     server: 192.168.10.100
 ---
 apiVersion: v1
