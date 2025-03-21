@@ -1,0 +1,34 @@
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+
+grafana:
+  admin:
+    existingSecret: grafana-admin-secret  # Created via `kubectl create secret`
+  service:
+    type: LoadBalancer
+  ingress:
+    enabled: true
+    ingressClassName: cilium
+    hosts:
+      - grafana.fletcherlabs.net
+    paths:
+      - /
+    pathType: Prefix
+
+prometheusOperator:
+  enabled: true
+  serviceMonitor:
+    selfMonitor: true
+
+alertmanager:
+  enabled: false
+
+kubelet:
+  enabled: true
+  serviceMonitor:
+    enable: true
+
+nodeExporter:
+  enabled: true
