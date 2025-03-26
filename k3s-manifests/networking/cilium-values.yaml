@@ -1,4 +1,3 @@
-#values.yaml
 k8sServiceHost: 192.168.10.30
 k8sServicePort: 6443
 
@@ -24,7 +23,6 @@ operator:
 rollOutCiliumPods: true
 
 # Traefik is disable this is the Cilium replacement
-
 ingressController:
   enabled: true
   default: true
@@ -32,4 +30,8 @@ ingressController:
   service:
     annotations:
       io.cilium/lb-ipam-ips: 192.168.10.40
+    httpPort: 8080  # Add this to change the HTTP port from 80 to 8080
+    httpsPort: 8443 # Add this to change the HTTPS port from 443 to 8443
 
+envoy:
+  enabled: true

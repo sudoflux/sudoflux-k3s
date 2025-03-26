@@ -23,6 +23,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
   nfs:
     path: /mnt/nvme_storage/radarr
     server: 192.168.10.100
@@ -68,6 +69,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
   nfs:
     path: /mnt/nvme_storage/prowlarr
     server: 192.168.10.100
@@ -112,6 +114,7 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
   nfs:
     path: /mnt/nvme_storage/sabnzbd
     server: 192.168.10.100

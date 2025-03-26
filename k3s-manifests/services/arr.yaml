@@ -2,6 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: plex-config-pvc
+  namespace: media
 spec:
   accessModes:
     - ReadWriteMany
@@ -16,6 +17,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: radarr-config-pvc
+  namespace: media
 spec:
   accessModes:
     - ReadWriteMany
@@ -30,6 +32,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: sonarr-config-pvc
+  namespace: media
 spec:
   accessModes:
     - ReadWriteMany
@@ -44,6 +47,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: overseerr-config-pvc
+  namespace: media
 spec:
   accessModes:
     - ReadWriteMany
@@ -58,6 +62,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: prowlarr-config-pvc
+  namespace: media
 spec:
   accessModes:
     - ReadWriteMany
@@ -72,6 +77,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: lidarr-config-pvc
+  namespace: media
 spec:
   accessModes:
     - ReadWriteMany
@@ -85,6 +91,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: sabnzbd-config-pvc
+  namespace: media
 spec:
   accessModes:
     - ReadWriteMany
@@ -98,6 +105,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: bazarr-config-pvc
+  namespace: media
 spec:
   accessModes:
     - ReadWriteMany
@@ -111,7 +119,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: k3s-data-pvc
-  namespace: default
+  namespace: media
 spec:
   accessModes:
     - ReadWriteMany
@@ -124,7 +132,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: rr-env
-  namespace: default
+  namespace: media
 data:
   TZ: "America/Kentucky/Louisville"
   PUID: "1000"
@@ -320,7 +328,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: sonarr-ingress
-  namespace: default
+  namespace: media
 spec:
   ingressClassName: cilium
   rules:
